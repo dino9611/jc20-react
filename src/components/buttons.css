@@ -1,0 +1,7 @@
+.mar-1 {
+  margin-right: 10px !important;
+}
+
+.tombol:disabled {
+  background-color: rgb(118, 130, 163) !important;
+}
