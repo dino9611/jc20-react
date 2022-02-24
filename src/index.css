@@ -2,3 +2,20 @@
   margin: 0px;
   padding: 0px;
 }
+
+.main-container {
+  padding-left: 20%;
+  padding-right: 20%;
+  min-height: 100vh;
+  background-color: rgba(216, 215, 215, 0.931);
+}
+
+.kotak {
+  height: 20vh;
+}
+
+.hari {
+  font-size: 1.2em;
+  font-weight: 500;
+  border-bottom: 0.5px solid rgb(212, 212, 212);
+}
