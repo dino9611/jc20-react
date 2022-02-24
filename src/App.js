@@ -15,7 +15,8 @@ import {
 
 function App() {
   const [isOpen, setisOpen] = useState(false);
-
+  const [isOpenDel, setisOpenDel] = useState(false);
+  // data awal
   const [dataKegiatan, setdataKegiatan] = useState([
     {
       kegiatan: "belajar",
@@ -26,14 +27,25 @@ function App() {
       hari: "Rabu",
     },
   ]);
-
+  // add feauter
   const [input, setInput] = useState({
+    kegiatan: "",
+    hari: "",
+  });
+  // del feature
+  const [indexdel, setindexdel] = useState(-1);
+  // edit feature
+  const [indexed, setindexded] = useState(-1);
+  const [inputEdit, setinputEdit] = useState({
     kegiatan: "",
     hari: "",
   });
 
   const toggle = () => {
     setisOpen(!isOpen);
+  };
+  const toggleDel = () => {
+    setisOpenDel(!isOpenDel);
   };
 
   const handleInput = (e) => {
@@ -59,6 +71,19 @@ function App() {
     }
   };
 
+  const onDeleteClick = (index) => {
+    setindexdel(index);
+    setisOpenDel(true);
+  };
+
+  const onYesDeleteClick = () => {
+    let dataKegiatanMut = dataKegiatan;
+    dataKegiatanMut.splice(indexdel, 1);
+    setdataKegiatan(dataKegiatanMut);
+    setindexdel(-1);
+    setisOpenDel(false);
+  };
+
   const renderData = () => {
     return dataKegiatan.map((val, index) => {
       return (
@@ -73,7 +98,9 @@ function App() {
               </div>
               <div>
                 <Button color="warning me-2">Edit</Button>
-                <Button color="danger">Delete</Button>
+                <Button color="danger" onClick={() => onDeleteClick(index)}>
+                  Delete
+                </Button>
               </div>
             </div>
           </div>
@@ -82,8 +109,53 @@ function App() {
     });
   };
 
+  const renderModalDel = () => {
+    if (indexdel < 0) {
+      return null;
+    }
+    return (
+      <Modal isOpen={isOpenDel} toggle={toggleDel}>
+        <ModalHeader toggle={toggleDel}>Delete Data</ModalHeader>
+        <ModalBody>
+          apakah anda yakin menghapus {dataKegiatan[indexdel].kegiatan}
+        </ModalBody>
+        <ModalFooter>
+          <Button color="primary" onClick={onYesDeleteClick}>
+            Delete Data
+          </Button>
+          <Button onClick={toggleDel}>Cancel</Button>
+        </ModalFooter>
+      </Modal>
+    );
+  };
+
   return (
     <div>
+      {renderModalDel()}
+      {/* bisa cara ini */}
+      {/* {indexdel < 0 ? null : (
+        <Modal isOpen={isOpenDel} toggle={toggleDel}>
+          <ModalHeader toggle={toggleDel}>Delete Data</ModalHeader>
+          <ModalBody>
+            apakah anda yakin menghapus {dataKegiatan[indexdel].kegiatan}
+          </ModalBody>
+          <ModalFooter>
+            <Button color="primary">Delete Data</Button>
+            <Button onClick={toggleDel}>Cancel</Button>
+          </ModalFooter>
+        </Modal>
+      )} */}
+      {/* bisa juga cara ini */}
+      {/* <Modal isOpen={isOpenDel} toggle={toggleDel}>
+        <ModalHeader toggle={toggleDel}>Delete Data</ModalHeader>
+        <ModalBody>
+          apakah anda yakin menghapus {dataKegiatan[indexdel]?.kegiatan}
+        </ModalBody>
+        <ModalFooter>
+          <Button color="primary">Delete Data</Button>
+          <Button onClick={toggleDel}>Cancel</Button>
+        </ModalFooter>
+      </Modal> */}
       <Modal isOpen={isOpen} toggle={toggle}>
         <ModalHeader toggle={toggle}>Tambah Data</ModalHeader>
         <ModalBody>
