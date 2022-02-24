@@ -4,62 +4,12 @@ import "./App.css";
 import Text from "./components/text";
 import Title from "./components/title";
 import { ButtonPrimary, ButtonSecondary, API_URL } from "./components/buttons";
-// function atau class yang return jsx disebut dengan komponen
-let numb = 0;
+
 function App() {
-  console.log("rendr");
-  // usestate return array
-  // state
-  // array pertama itu adalh value
-  // array kedua adalah function untuk mengubah state
-  let [number, setnumber] = useState(0);
-  let [angka, setangka] = useState(0);
-  // let dataManusia = useState()
-
-  // ini sama dengan compoennt didmount
-  useEffect(() => {
-    console.log("render pertama");
-  }, []);
-
-  // ini sama dengan didupdate
-  useEffect(() => {
-    if (numb) {
-      console.log("exe");
-    }
-    numb++;
-  }, [number]);
-
-  const tambahAngka = () => {
-    // setangka(angka + 1);
-    setnumber(number + 1);
-    // setdata([...data, dataujung]);
-    // numb++;
-    // console.log(numb);
-  };
-
   return (
-    <>
-      <div className="App">
-        <header className="App-header">
-          {/* <Text />
-          <Text />
-          <Text />
-          <Title /> */}
-          {/* <div>{API_URL}</div>
-          <ButtonPrimary name="coba" style={{ backgroundColor: "red" }} />
-          <ButtonPrimary name="coba lagi" />
-          <ButtonPrimary name="coba aja" />
-          <ButtonSecondary>lagi aja</ButtonSecondary> */}
-          <h1>{number}</h1>
-          <h1>{angka}</h1>
-          <div>
-            <button>-</button>
-            <button onClick={tambahAngka}>+</button>
-          </div>
-        </header>
-      </div>
-      <div></div>
-    </>
+    <div>
+      <h1>tes</h1>
+    </div>
   );
 }
 
