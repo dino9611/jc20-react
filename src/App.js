@@ -3,7 +3,7 @@ import React, { Component, useState, useEffect } from "react";
 import "./App.css";
 // import Text from "./components/text";
 // import Title from "./components/title";
-// import { ButtonPrimary, ButtonSecondary, API_URL } from "./components/buttons";
+import { ButtonPrimary, ButtonSecondary } from "./components/buttons";
 import {
   Modal,
   ModalHeader,
@@ -11,11 +11,14 @@ import {
   ModalFooter,
   Button,
   Fade,
+  Collapse,
+  Alert,
 } from "reactstrap";
 
 function App() {
   const [isOpen, setisOpen] = useState(false);
   const [isOpenDel, setisOpenDel] = useState(false);
+  const [isOpenEd, setisOpenEd] = useState(false);
   // data awal
   const [dataKegiatan, setdataKegiatan] = useState([
     {
@@ -47,9 +50,22 @@ function App() {
   const toggleDel = () => {
     setisOpenDel(!isOpenDel);
   };
+  const toggleEd = () => {
+    setisOpenEd(!isOpenEd);
+  };
 
   const handleInput = (e) => {
+    // console.log(e.target);
+    console.log(e.target.value);
+    console.log(e.target.name);
     setInput({ ...input, [e.target.name]: e.target.value });
+  };
+
+  const handleInputEdit = (e) => {
+    // console.log(e.target);
+    console.log(e.target.value);
+    console.log(e.target.name);
+    setinputEdit({ ...inputEdit, [e.target.name]: e.target.value });
   };
 
   const onSaveDatahandle = (e) => {
@@ -84,11 +100,37 @@ function App() {
     setisOpenDel(false);
   };
 
+  const cancelDEl = () => {
+    setindexdel(-1);
+  };
+
+  // edit feature
+  const onEditClick = (ind) => {
+    setindexded(ind);
+    setinputEdit(dataKegiatan[ind]);
+    setisOpenEd(true);
+  };
+
+  // saveEdit
+  const onSaveEditCLick = (e) => {
+    // untuk mencegah apa website tidak reload
+    e.preventDefault();
+    let dataKegiatanMut = dataKegiatan;
+    dataKegiatanMut.splice(indexed, 1, inputEdit);
+    setindexded(-1);
+    setisOpenEd(false);
+    setdataKegiatan(dataKegiatanMut);
+    setinputEdit({
+      kegiatan: "",
+      hari: "",
+    });
+  };
+
   const renderData = () => {
     return dataKegiatan.map((val, index) => {
       return (
         <Fade key={index}>
-          <div className="shadow-lg p-3 kotak rounded w-100 bg-white my-3">
+          <div className="shadow-lg p-3 kotak rounded w-100 bg-white mt-3">
             <div className="hari mb-2 text-success text-capitalize">
               {val.hari}
             </div>
@@ -97,13 +139,32 @@ function App() {
                 <h3 className="text-capitalize">{val.kegiatan}</h3>
               </div>
               <div>
-                <Button color="warning me-2">Edit</Button>
+                <Button color="warning me-2" onClick={() => onEditClick(index)}>
+                  Edit
+                </Button>
                 <Button color="danger" onClick={() => onDeleteClick(index)}>
                   Delete
                 </Button>
               </div>
             </div>
           </div>
+          {/* <Collapse isOpen={index == indexdel}>
+            <div className="bg-white rounded px-3 d-flex justify-content-end py-2">
+              <div>
+                <div>Apakah anda yakin hapus {val.kegiatan}?</div>
+                <div className="d-flex mt-2 justify-content-end">
+                  <Button color="danger">Yes</Button>
+                  <Button
+                    color="light"
+                    className="ms-3 shadow"
+                    onClick={cancelDEl}
+                  >
+                    No
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </Collapse> */}
         </Fade>
       );
     });
@@ -114,7 +175,7 @@ function App() {
       return null;
     }
     return (
-      <Modal isOpen={isOpenDel} toggle={toggleDel}>
+      <Modal backdropClassName="tes" isOpen={isOpenDel} toggle={toggleDel}>
         <ModalHeader toggle={toggleDel}>Delete Data</ModalHeader>
         <ModalBody>
           apakah anda yakin menghapus {dataKegiatan[indexdel].kegiatan}
@@ -129,9 +190,59 @@ function App() {
     );
   };
 
+  const renderModalEd = () => {
+    if (indexed < 0) {
+      return null;
+    }
+    return (
+      <Modal isOpen={isOpenEd} toggle={toggleEd}>
+        <ModalHeader toggle={toggleEd}>Edit Data</ModalHeader>
+        <ModalBody>
+          <form onSubmit={onSaveEditCLick}>
+            <div className="my-2">
+              <label>Kegiatan</label>
+              <input
+                value={inputEdit.kegiatan}
+                name="kegiatan"
+                type="text"
+                placeholder="masukkan Kegiatan"
+                className="form-control mt-2"
+                onChange={handleInputEdit}
+              />
+            </div>
+            <div className="my-2">
+              <label>Hari</label>
+              <select
+                value={inputEdit.hari}
+                name="hari"
+                onChange={handleInputEdit}
+                className="form-control mt-2"
+              >
+                <option value={"Senin"}>Senin</option>
+                <option value={"Selasa"}>Selasa</option>
+                <option value={"Rabu"}>Rabu</option>
+                <option value={"Kamis"}>Kamis</option>
+                <option value={"Jum'at"}>Jum'at</option>
+                <option value={"Sabtu"}>Sabtu</option>
+                <option value={"Minggu"}>Minggu</option>
+              </select>
+            </div>
+          </form>
+        </ModalBody>
+        <ModalFooter>
+          <Button color="primary" onClick={onSaveEditCLick}>
+            Save Data
+          </Button>
+          <Button onClick={toggleEd}>Cancel</Button>
+        </ModalFooter>
+      </Modal>
+    );
+  };
+
   return (
     <div>
       {renderModalDel()}
+      {renderModalEd()}
       {/* bisa cara ini */}
       {/* {indexdel < 0 ? null : (
         <Modal isOpen={isOpenDel} toggle={toggleDel}>
@@ -156,6 +267,7 @@ function App() {
           <Button onClick={toggleDel}>Cancel</Button>
         </ModalFooter>
       </Modal> */}
+
       <Modal isOpen={isOpen} toggle={toggle}>
         <ModalHeader toggle={toggle}>Tambah Data</ModalHeader>
         <ModalBody>
