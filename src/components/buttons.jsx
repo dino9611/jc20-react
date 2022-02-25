@@ -45,5 +45,3 @@ export const ButtonSecondary = (props) => {
     </button>
   );
 };
-
-export const API_URL = "tesSSSS";
