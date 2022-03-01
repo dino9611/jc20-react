@@ -1,0 +1,42 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "dinoas",
+      "password": "strong9"
+    },
+    {
+      "id": 2,
+      "username": "dinoS",
+      "password": "strong9"
+    },
+    {
+      "username": "aqil",
+      "password": "dikaTamp4an",
+      "id": 3,
+      "gender": "non-binary"
+    },
+    {
+      "username": "andikas",
+      "password": "dikaTamp4an",
+      "id": 4
+    }
+  ],
+  "activities": [
+    {
+      "id": 2,
+      "kegiatan": "berenang sia",
+      "hari": "Kamis"
+    },
+    {
+      "id": 3,
+      "kegiatan": "Koding",
+      "hari": "Rabu"
+    },
+    {
+      "kegiatan": "bulu tangkis",
+      "hari": "Sabtu",
+      "id": 4
+    }
+  ]
+}

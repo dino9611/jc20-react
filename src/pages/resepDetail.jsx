@@ -1,8 +1,12 @@
+import { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 
 const ResepDetail = () => {
   const loc = useLocation();
   const params = useParams();
+  useEffect(() => {
+    // axios disini
+  }, []);
   console.log(params);
   console.log(loc);
   return (

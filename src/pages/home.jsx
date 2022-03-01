@@ -9,22 +9,16 @@ import {
   Collapse,
   Alert,
 } from "reactstrap";
+import axios from "axios";
+
+const API_URL = `http://localhost:5000`;
 
 function Home() {
   const [isOpen, setisOpen] = useState(false);
   const [isOpenDel, setisOpenDel] = useState(false);
   const [isOpenEd, setisOpenEd] = useState(false);
   // data awal
-  const [dataKegiatan, setdataKegiatan] = useState([
-    {
-      kegiatan: "belajar",
-      hari: "Senin",
-    },
-    {
-      kegiatan: "berenang",
-      hari: "Rabu",
-    },
-  ]);
+  const [dataKegiatan, setdataKegiatan] = useState([]);
   // add feauter
   const [input, setInput] = useState({
     kegiatan: "",
@@ -38,6 +32,19 @@ function Home() {
     kegiatan: "",
     hari: "",
   });
+
+  const fetchdata = async () => {
+    try {
+      let res = await axios.get(`${API_URL}/activities`);
+      setdataKegiatan(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchdata();
+  }, []);
 
   const toggle = () => {
     setisOpen(!isOpen);
@@ -65,20 +72,25 @@ function Home() {
 
   const onSaveDatahandle = (e) => {
     e.preventDefault();
+
     let { hari, kegiatan } = input;
     if ([hari, kegiatan].includes("")) {
       alert("tidak boleh save");
     } else {
-      let dataKegiatanMut = dataKegiatan;
-      dataKegiatanMut.push(input);
-      setdataKegiatan(dataKegiatanMut);
-      setisOpen(false);
-      setInput({
-        kegiatan: "",
-        hari: "",
-      });
-      // cara lain
-      // setdataKegiatan([...dataKegiatan,input])
+      // post put patch datanya harus object
+      axios
+        .post(`${API_URL}/activities`, input)
+        .then(() => {
+          fetchdata();
+          setisOpen(false);
+          setInput({
+            kegiatan: "",
+            hari: "",
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   };
 
@@ -87,10 +99,11 @@ function Home() {
     setisOpenDel(true);
   };
 
-  const onYesDeleteClick = () => {
-    let dataKegiatanMut = dataKegiatan;
-    dataKegiatanMut.splice(indexdel, 1);
-    setdataKegiatan(dataKegiatanMut);
+  const onYesDeleteClick = async () => {
+    // delete data in json-server
+    await axios.delete(`${API_URL}/activities/${dataKegiatan[indexdel].id}`);
+    // refresh data
+    fetchdata();
     setindexdel(-1);
     setisOpenDel(false);
   };
@@ -107,18 +120,27 @@ function Home() {
   };
 
   // saveEdit
-  const onSaveEditCLick = (e) => {
-    // untuk mencegah apa website tidak reload
-    e.preventDefault();
-    let dataKegiatanMut = dataKegiatan;
-    dataKegiatanMut.splice(indexed, 1, inputEdit);
-    setindexded(-1);
-    setisOpenEd(false);
-    setdataKegiatan(dataKegiatanMut);
-    setinputEdit({
-      kegiatan: "",
-      hari: "",
-    });
+  const onSaveEditCLick = async (e) => {
+    try {
+      // untuk mencegah apa website tidak reload
+      e.preventDefault();
+      // UPDATE DATA DI JSON-SERVER
+      await axios.patch(
+        `${API_URL}/activities/${dataKegiatan[indexed].id}`,
+        inputEdit
+      );
+      // refresh data
+      fetchdata();
+
+      setindexded(-1);
+      setisOpenEd(false);
+      setinputEdit({
+        kegiatan: "",
+        hari: "",
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const renderData = () => {
