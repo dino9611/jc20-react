@@ -32,7 +32,7 @@
 
 a {
   text-decoration: none !important;
-  color: white !important;
+  color: inherit !important;
 }
 
 a:hover {
@@ -61,4 +61,5 @@ a:hover {
 .resep:hover {
   transform: translateY(-5px);
   transition: 500ms;
+  cursor: pointer;
 }

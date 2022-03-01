@@ -8,6 +8,8 @@ import {
   CardTitle,
   Button,
 } from "reactstrap";
+import { Link } from "react-router-dom";
+
 const API_URL = `https://api.spoonacular.com`;
 const API_KEY = `apiKey=ff938463dc4844d889bd93169fe83043`;
 
@@ -93,14 +95,16 @@ const Resep = () => {
     return resep.map((val) => {
       return (
         <div className="px-1 my-1 " key={val.id} style={{ width: "20%" }}>
-          <Card className="shadow-lg me-2 resep">
-            <CardImg alt={val.title} src={val.image} top width="100%" />
-            <CardBody>
-              <CardTitle tag="h6" style={{ height: "10vh" }}>
-                {val.title}
-              </CardTitle>
-            </CardBody>
-          </Card>
+          <Link state={val} to={`/resep/${val.id}`}>
+            <Card className="shadow-lg me-2 resep">
+              <CardImg alt={val.title} src={val.image} top width="100%" />
+              <CardBody>
+                <CardTitle tag="h6" style={{ height: "10vh" }}>
+                  {val.title}
+                </CardTitle>
+              </CardBody>
+            </Card>
+          </Link>
         </div>
       );
     });
