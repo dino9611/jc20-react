@@ -1,14 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import {
-  Spinner,
-  Card,
-  CardImg,
-  CardBody,
-  CardTitle,
-  Button,
-} from "reactstrap";
-import { Link } from "react-router-dom";
+import { PaginationItem, Pagination, PaginationLink, Button } from "reactstrap";
+import Loading from "../components/loading";
+import CardComp from "../components/card";
+import { generatePages } from "../helpers";
 
 const API_URL = `https://api.spoonacular.com`;
 const API_KEY = `apiKey=ff938463dc4844d889bd93169fe83043`;
@@ -29,27 +24,18 @@ const Resep = () => {
 
   //   buat paging perlu state page
   const [page, setpage] = useState(0);
+  const [maxPage] = useState(15);
 
   useEffect(() => {
-    axios
-      .get(`${API_URL}/recipes/complexSearch?${API_KEY}`)
-      .then((res) => {
-        console.log(res);
-        console.log(res.data);
-        setresep(res.data.results);
-      })
-      .catch((err) => {
-        console.log(err.response);
-      })
-      .finally(() => {
-        setloading(false);
-      });
-  }, []);
+    fetchDatafilter();
+  }, [page, selectedDiet]);
 
   const fetchDatafilter = async () => {
     try {
       console.log(selectedDiet);
-      let url = `${API_URL}/recipes/complexSearch?${API_KEY}`;
+      let url = `${API_URL}/recipes/complexSearch?${API_KEY}&offset=${
+        page * 10
+      }`;
       if (selectedDiet) {
         url += `&diet=${selectedDiet}`;
       }
@@ -57,15 +43,18 @@ const Resep = () => {
       setresep(res.data.results);
     } catch (error) {
       console.log(error);
+    } finally {
+      setloading(false);
     }
   };
   //   componenntdidupdate ini ke trigger pada saat selected diet berubah
-  useEffect(() => {
-    fetchDatafilter();
-  }, [selectedDiet]);
+  // useEffect(() => {
+  //   fetchDatafilter();
+  // }, [selectedDiet]);
 
   const onDietCLick = (diet) => {
     setSelectedDiet(diet);
+    setpage(0);
     // console.log(diet);
     // let url = `${API_URL}/recipes/complexSearch?${API_KEY}`;
     // if (diet) {
@@ -93,20 +82,7 @@ const Resep = () => {
   //   render data
   const renderResep = () => {
     return resep.map((val) => {
-      return (
-        <div className="px-1 my-1 " key={val.id} style={{ width: "20%" }}>
-          <Link state={val} to={`/resep/${val.id}`}>
-            <Card className="shadow-lg me-2 resep">
-              <CardImg alt={val.title} src={val.image} top width="100%" />
-              <CardBody>
-                <CardTitle tag="h6" style={{ height: "10vh" }}>
-                  {val.title}
-                </CardTitle>
-              </CardBody>
-            </Card>
-          </Link>
-        </div>
-      );
+      return <CardComp data={val} key={val.id} />;
     });
   };
 
@@ -126,31 +102,25 @@ const Resep = () => {
       );
     });
   };
-  //   const Coba = (
-  //     <div className="px-1 my-1 " style={{ width: "20%" }}>
-  //       <Card className="shadow-lg me-2 resep">
-  //         <CardImg
-  //           alt="Card image cap"
-  //           src="https://spoonacular.com/recipeImages/716426-312x231.jpg"
-  //           top
-  //           width="100%"
-  //         />
-  //         <CardBody>
-  //           <CardTitle tag="h6" style={{ height: "10vh" }}>
-  //             Cauliflower, Brown Rice, and Vegetable Fried Rice"
-  //           </CardTitle>
-  //         </CardBody>
-  //       </Card>
-  //     </div>
-  //   );
+
+  const renderPagination = () => {
+    const arrPages = generatePages(page + 1, maxPage);
+    return arrPages.map((val) => {
+      return (
+        <PaginationItem
+          onClick={() => setpage(val - 1)}
+          active={val === page + 1}
+          key={val}
+        >
+          <PaginationLink>{val}</PaginationLink>
+        </PaginationItem>
+      );
+    });
+  };
 
   return (
     <div>
-      {loading ? (
-        <div className="loading-container d-flex justify-content-center align-items-center">
-          <Spinner size={"lg"} color="primary" />
-        </div>
-      ) : null}
+      {loading ? <Loading /> : null}
       <div className="container pt-3 ">
         <div>
           <Button
@@ -165,6 +135,32 @@ const Resep = () => {
           {renderDiet()}
         </div>
         <div className="d-flex mt-5 mb-3 flex-wrap">{renderResep()}</div>
+        <div>
+          <Pagination>
+            <PaginationItem onClick={() => setpage(0)} disabled={page === 0}>
+              <PaginationLink first></PaginationLink>
+            </PaginationItem>
+            <PaginationItem
+              onClick={() => setpage(page - 1)}
+              disabled={page === 0}
+            >
+              <PaginationLink previous></PaginationLink>
+            </PaginationItem>
+            {renderPagination()}
+            <PaginationItem
+              onClick={() => setpage(page + 1)}
+              disabled={page === maxPage - 1}
+            >
+              <PaginationLink next></PaginationLink>
+            </PaginationItem>
+            <PaginationItem
+              onClick={() => setpage(maxPage - 1)}
+              disabled={page === maxPage - 1}
+            >
+              <PaginationLink last></PaginationLink>
+            </PaginationItem>
+          </Pagination>
+        </div>
       </div>
     </div>
   );
