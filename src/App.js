@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import Home from "./pages/home";
@@ -9,10 +9,21 @@ import Topics from "./pages/topics";
 import NotFound from "./pages/notfound";
 import Header from "./components/header";
 import Redux from "./pages/redux";
+import { useDispatch } from "react-redux";
 
 function App() {
+  const dispatch = useDispatch();
+  // componentDidMount
+  useEffect(() => {
+    let username = localStorage.getItem("username");
+    if (username) {
+      let data = { username };
+      dispatch({ type: "LOGIN", payload: data });
+    }
+  }, []);
+
   return (
-    <div>
+    <div className="">
       <Header />
       <div>
         <Routes>

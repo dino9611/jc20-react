@@ -63,3 +63,27 @@ a:hover {
   transition: 500ms;
   cursor: pointer;
 }
+
+.password {
+  width: 90%;
+  border: none;
+  /* background-color: yellow; */
+}
+.icon-container {
+  width: 10%;
+  /* background-color: green; */
+}
+.password:focus {
+  outline: none;
+}
+
+.pass-container {
+  outline: rgb(168, 168, 168);
+  border: 1px solid rgb(185, 185, 185) !important;
+}
+
+.pass-container:focus-within {
+  /* outline: 1px solid blue; */
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),
+    0 0 8px rgba(0, 255, 85, 0.52);
+}
