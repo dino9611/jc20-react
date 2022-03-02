@@ -8,6 +8,7 @@ import ResepDetail from "./pages/resepDetail";
 import Topics from "./pages/topics";
 import NotFound from "./pages/notfound";
 import Header from "./components/header";
+import Redux from "./pages/redux";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/resep/:id" element={<ResepDetail />} />
           <Route path="/login" element={<Login />} />
           <Route path="/topics/*" element={<Topics />} />
+          <Route path="/redux" element={<Redux />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         {/* <Resep /> */}

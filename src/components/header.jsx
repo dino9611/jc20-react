@@ -1,8 +1,8 @@
 import React from "react";
-
+import { connect } from "react-redux";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 
-const Header = () => {
+const Header = (props) => {
   let username = localStorage.getItem("username");
   let loc = useLocation();
   // useLocation gunanya untuk mendapatkan data dimana user berada
@@ -24,6 +24,9 @@ const Header = () => {
       <Link to="/resep" className={"me-2 " + activeClassName("/resep")}>
         Resep
       </Link>
+      <Link to="/redux" className={"me-2 " + activeClassName("/redux")}>
+        Redux {props.bebas}
+      </Link>
       {username ? (
         <div className="text-white me-2">Halo , {username}</div>
       ) : null}
@@ -38,4 +41,10 @@ const Header = () => {
   );
 };
 
-export default Header;
+const mapStateToProps = (state) => {
+  return {
+    bebas: state.angka.value,
+  };
+};
+
+export default connect(mapStateToProps)(Header);
