@@ -25,7 +25,7 @@ const Header = (props) => {
         Resep
       </Link>
       <Link to="/redux" className={"me-2 " + activeClassName("/redux")}>
-        Redux {props.bebas}
+        Redux {props.jumlahKata}
       </Link>
       {username ? (
         <div className="text-white me-2">Halo , {username}</div>
@@ -44,6 +44,7 @@ const Header = (props) => {
 const mapStateToProps = (state) => {
   return {
     bebas: state.angka.value,
+    jumlahKata: state.kata.jumlah,
   };
 };
 

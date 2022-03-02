@@ -24,6 +24,8 @@ const Login = () => {
   const login = () => {
     //   redirect
     localStorage.setItem("username", "dino");
+    // anggepsudah berhasil dandata dari backend
+    let data = { username: "dino" };
     navigate("/", { replace: true });
     // cara lain
     // MENGGUNAKAN NAVIGATE pada saat redirect dan mau melindungi sebuah page
