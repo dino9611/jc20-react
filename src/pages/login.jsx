@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import { connect, useSelector } from "react-redux";
-import { loginAction } from "../redux/actions";
+import { loginAction, loginActionsThunk } from "../redux/actions";
 import { FaEye } from "react-icons/fa";
-import { Label, Alert } from "reactstrap";
+import { Label, Alert, Spinner } from "reactstrap";
+import axios from "axios";
+import { API_URL } from "../helpers";
 
 const RedirectAuth = ({ children }) => {
   const userData = useSelector((state) => state.userData);
@@ -22,11 +24,13 @@ const Login = (props) => {
   const [error, seterror] = useState({
     username: "",
     password: "",
+    message: "",
   });
   const [input, setinput] = useState({
     username: "",
     password: "",
   });
+  const [loading, setloading] = useState(false);
 
   const onInputChange = (e) => {
     setinput({ ...input, [e.target.name]: e.target.value });
@@ -34,24 +38,7 @@ const Login = (props) => {
 
   const login = (e) => {
     e.preventDefault();
-    //   redirect
-    // anggep sudah berhasil dan data dari backend
-    let errors = { username: "", password: "" };
-    if (!input.username) {
-      errors.username = "isi dulu boy";
-    }
-    if (!input.password) {
-      errors.password = "isi pass dulu boy";
-    }
-    if (input.username && input.password) {
-      let data = input;
-      props.loginAction(data);
-      localStorage.setItem("username", input.username);
-      seterror({ username: "", password: "" });
-      navigate("/", { replace: true });
-    } else {
-      seterror({ ...errors });
-    }
+    props.loginActionsThunk(input, navigate, seterror, setloading);
     // cara lain
     // MENGGUNAKAN NAVIGATE pada saat redirect dan mau melindungi sebuah page
     // setpetRedirect("/");
@@ -99,10 +86,27 @@ const Login = (props) => {
             {error.password && (
               <div className="text-danger">{error.password}</div>
             )}
+            {error.message && (
+              <Alert color="danger mt-2">
+                {error.message}
+                <span
+                  onClick={() => seterror({ ...error, message: "" })}
+                  className="tunjuk float-end"
+                >
+                  X
+                </span>
+              </Alert>
+            )}
             <div className="mt-2 float-end">
-              <button type="submit" className="btn btn-primary">
-                Login
-              </button>
+              {loading ? (
+                <button disabled className="btn btn-primary">
+                  <Spinner color="light" />
+                </button>
+              ) : (
+                <button type="submit" className="btn btn-primary">
+                  Login
+                </button>
+              )}
             </div>
           </form>
           {/* <button className="btn btn-primary" onClick={login}>
@@ -114,4 +118,4 @@ const Login = (props) => {
   );
 };
 
-export default connect(null, { loginAction })(Login);
+export default connect(null, { loginAction, loginActionsThunk })(Login);

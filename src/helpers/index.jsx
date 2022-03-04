@@ -1,6 +1,8 @@
 export const API_URL_SPOON = `https://api.spoonacular.com`;
 export const API_KEY_SPOON = `apiKey=ff938463dc4844d889bd93169fe83043`;
 
+export const API_URL = `http://localhost:5000`;
+
 //
 export const generatePages = (currPage, maxPage) => {
   let output;
